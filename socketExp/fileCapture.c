@@ -76,7 +76,7 @@ void capture_file(char *ifname){
     char **fragments;
     char *buffer;
     int done = 0;
-    int frag_count = 99999;
+    int frag_count;
     int totalbytes = 0;
     int *sizes;
     uint32_t crc_chk;
@@ -101,22 +101,26 @@ void capture_file(char *ifname){
 
     frag_count = hdr->fragment_count;
 
-    fragments = calloc(hdr->fragment_count, sizeof(char*));
+    fragments = calloc(frag_count, sizeof(char*));
 
-    sizes = calloc(hdr->fragment_count, sizeof(int));
+    sizes = calloc(frag_count, sizeof(int));
 
     fragments[hdr->fragment_index - 1] = hdr->data;
     sizes[hdr->fragment_index - 1] = hdr->fragment_size;
     totalbytes += hdr->fragment_size;
     int j = 1;
     while (!done) {
-        fprintf(stderr, "%d bytes received\n", ret);
-
-
         buffer = calloc(RX_BUF_SIZE ,sizeof(char));
         hdr = (capture_format_t *) buffer;
 
         ret = recv(sfd, buffer, RX_BUF_SIZE, 0);
+        fprintf(stderr, "%d bytes received\n", ret);
+        if (ret <= 0) {
+            fprintf(stderr, "ERROR: recv failed ret: %d, errno: %d\n", ret, errno);
+            free(buffer);
+            continue;
+        }
+
         if(hdr->fragment_size > RX_BUF_SIZE){
             fprintf(stderr,"MAX BUFFER SIZE reached. ");
             fprintf(stderr,"Dropping... \n");
@@ -128,10 +132,9 @@ void capture_file(char *ifname){
             free(buffer);
             continue;
         }
-        if (ret <= 0) {
-            fprintf(stderr, "ERROR: recv failed ret: %d, errno: %d\n", ret, errno);
-            free(buffer);
-            return;
+        if(hdr->fragment_index <= 0 || hdr->fragment_index > hdr->fragment_count){
+            fprintf(stderr,"Error , reading fragment index : %d",hdr->fragment_index);
+            continue;
         }
         crc_chk = 0;
         crc32(hdr->data,hdr->fragment_size,&crc_chk);
@@ -142,10 +145,10 @@ void capture_file(char *ifname){
         }
         if (frag_count <= j)
             done=1;
-
+        fprintf(stderr," --- %d",hdr->fragment_index);
         if(sizes[hdr->fragment_index - 1] != 0){
             fprintf(stderr,"Same data ! discarding... \n");
-            free(buffer);
+            // free(buffer); SEGFAULT
             continue;
         }
 
@@ -164,20 +167,8 @@ void capture_file(char *ifname){
     }
 
     write_to_file(sizes, fragments, hdr->filename, frag_count);
-
+    printf("Completed (%s) \n",hdr->filename);
 }
-
-        void write_to_file(int *sizes, char **fragments, char *fname, int fragsize) {
-            FILE* outp;
-            outp = fopen(fname,"w");
-            for (int i = 0; i < fragsize; ++i) {
-                fwrite(fragments[i],sizes[i],1,outp);
-                free(fragments[i]- sizeof(capture_format_t));
-            }
-            free(sizes);
-            free(fragments);
-            fclose(outp);
-        }
 
 uint32_t crc32_for_byte(uint32_t r)
 {
@@ -196,4 +187,16 @@ void crc32(const void *data, size_t n_bytes, uint32_t* crc)
             table[i] = crc32_for_byte(i);
     for (i = 0; i < n_bytes; ++i)
         *crc = table[(uint8_t)*crc ^ ((uint8_t*)data)[i]] ^ *crc >> 8;
+}
+
+void write_to_file(int *sizes, char **fragments, char *fname, int fragsize) {
+    FILE* outp;
+    outp = fopen(fname,"w");
+    for (int i = 0; i < fragsize; ++i) {
+        fwrite(fragments[i],sizes[i],1,outp);
+        free(fragments[i]- sizeof(capture_format_t));
+    }
+    free(sizes);
+    free(fragments);
+    fclose(outp);
 }
