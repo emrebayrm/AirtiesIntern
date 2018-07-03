@@ -10,4 +10,5 @@ add_executable(socketExp
         myether.c
         myether.h
         rx_raw.c
-        tx_raw.c fileCapture.c concurrentFileCaptuure.c)
+        tx_raw.c fileCapture.c concurrentFileCaptuure.c
+        fileCap1.1/fileCapture.c)
