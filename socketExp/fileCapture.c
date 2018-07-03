@@ -86,10 +86,10 @@ void capture_file(char *ifname){
         return;
     }
 
-    buffer = malloc(RX_BUF_SIZE);
+    buffer = malloc(RX_BUF_SIZE + sizeof(capture_format_t));
     hdr = (capture_format_t *) buffer;
 
-    ret = recv(sfd, hdr, RX_BUF_SIZE, 0);
+    ret = recv(sfd, hdr, RX_BUF_SIZE + sizeof(capture_format_t), 0);
 
     if (ret <= 0) {
         fprintf(stderr, "ERROR: recv failed ret: %d, errno: %d\n", ret, errno);
@@ -110,10 +110,10 @@ void capture_file(char *ifname){
     totalbytes += hdr->fragment_size;
     int j = 1;
     while (!done) {
-        buffer = calloc(RX_BUF_SIZE ,sizeof(char));
+        buffer = calloc(RX_BUF_SIZE + sizeof(capture_format_t),sizeof(char));
         hdr = (capture_format_t *) buffer;
 
-        ret = recv(sfd, buffer, RX_BUF_SIZE, 0);
+        ret = recv(sfd, buffer, RX_BUF_SIZE + sizeof(capture_format_t), 0);
         fprintf(stderr, "%d bytes received\n", ret);
         if (ret <= 0) {
             fprintf(stderr, "ERROR: recv failed ret: %d, errno: %d\n", ret, errno);
@@ -121,7 +121,7 @@ void capture_file(char *ifname){
             continue;
         }
 
-        if(hdr->fragment_size > RX_BUF_SIZE){
+        if(hdr->fragment_size > RX_BUF_SIZE + sizeof(capture_format_t)){
             fprintf(stderr,"MAX BUFFER SIZE reached. ");
             fprintf(stderr,"Dropping... \n");
             free(buffer);
@@ -145,7 +145,7 @@ void capture_file(char *ifname){
         }
         if (frag_count <= j)
             done=1;
-        fprintf(stderr," --- %d",hdr->fragment_index);
+
         if(sizes[hdr->fragment_index - 1] != 0){
             fprintf(stderr,"Same data ! discarding... \n");
             // free(buffer); SEGFAULT
