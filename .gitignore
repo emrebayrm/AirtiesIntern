@@ -172,3 +172,22 @@ modules.xml
 
 
 # End of https://www.gitignore.io/api/cmake,clion,jetbrains+all
+socketExp/filecap
+
+socketExp/fileCap1\.1/downloaded\.file
+
+socketExp/fileCap1\.1/fileCap
+
+socketExp/fileCap1\.1/rx_bins/bira_gobegi\.mp3
+
+socketExp/fileCap1\.1/rx_bins/files/bira_gobegi\.mp3
+
+socketExp/fileCap1\.1/rx_bins/files/newaaa
+
+socketExp/fileCap1\.1/rx_bins/files/newaab
+
+socketExp/fileCap1\.1/rx_bins/newaa
+
+socketExp/fileCap1\.1/rx_bins/newab
+
+*.swp
