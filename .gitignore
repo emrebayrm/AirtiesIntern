@@ -191,3 +191,7 @@ socketExp/fileCap1\.1/rx_bins/newaa
 socketExp/fileCap1\.1/rx_bins/newab
 
 *.swp
+
+*.xml
+
+CunitExample/test

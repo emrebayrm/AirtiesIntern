@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.10)
+project(CunitExample C)
+
+set(CMAKE_C_STANDARD 11)
+
+FIND_PATH(CUNIT_INCLUDE_DIR NAMES CUnit/CUnit.h)
+MARK_AS_ADVANCED(CUNIT_INCLUDE_DIR)
+
+FIND_LIBRARY(CUNIT_LIBRARY NAMES
+        cunit
+        libcunit
+        cunitlib
+        )
+MARK_AS_ADVANCED(CUNIT_LIBRARY)
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(CUnit DEFAULT_MSG CUNIT_LIBRARY CUNIT_INCLUDE_DIR)
+
+IF(CUNIT_FOUND)
+    SET(CUNIT_LIBRARIES ${CUNIT_LIBRARY})
+    SET(CUNIT_INCLUDE_DIRS ${CUNIT_INCLUDE_DIR})
+ENDIF(CUNIT_FOUND)
+
+add_executable(CunitExample main.c mylib.c mylib.h testmylib.c testmylib.h)
