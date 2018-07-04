@@ -36,9 +36,9 @@ typedef struct Node{
     struct Node *next;
 }files_t;
 
-void write_to_file(int *format, char **fragments, char *fname, int fragsize);
+void write_to_file(many_capture_t *datas, int size);
 
-void capture_file(char *ifname);
+void capture_file(char *ifname, char *erher_types);
 
 void crc32(const void *data, size_t n_bytes, uint32_t* crc);
 
@@ -46,8 +46,8 @@ int check_if_have(files_t *head,capture_format_t *hdr);
 
 static void usage()
 {
-    fprintf(stderr, "\nUsage:\n./rx_raw <ifname>\n");
-    fprintf(stderr, "Example:\n./rx_raw eth0\n");
+    fprintf(stderr, "\nUsage:\n./rx_raw <ifname> <ether_type>\n");
+    fprintf(stderr, "Example:\n./rx_raw eth0 0x1234\n");
 }
 
 int main(int argc , char *argv[]){
@@ -56,7 +56,7 @@ int main(int argc , char *argv[]){
     //struct timespec sleep_time;
     char *arg_ifname;
 
-    if (argc != 2) {
+    if (argc < 2 || argc > 3) {
         usage();
         goto bail;
     }
@@ -70,13 +70,13 @@ int main(int argc , char *argv[]){
         goto bail;
     }
 
-    capture_file(ifname);
+    capture_file(ifname, NULL);
     return 0;
     bail:
     return -1;
 }
 
-void capture_file(char* ifname){
+void capture_file(char *ifname, char *erher_types) {
     int sfd,ret;
     capture_format_t *hdr;
     char *buffer;
@@ -126,7 +126,7 @@ void crc32(const void *data, size_t n_bytes, uint32_t* crc)
         *crc = table[(uint8_t)*crc ^ ((uint8_t*)data)[i]] ^ *crc >> 8;
 }
 
-void write_to_file(int *sizes, char **fragments, char *fname, int fragsize) {
+void write_to_file(many_capture_t *datas, int size) {
     FILE* outp;
     outp = fopen(fname,"w");
     for (int i = 0; i < fragsize; ++i) {

@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "CUnit/CUnit.h"
-#include "CUnit/Automated.h"
+#include <CUnit/CUnit.h>
+#include <CUnit/Automated.h>
 #include "mylib.h"
 
 int inarr[] = { 3,9,7,8,6,4};
@@ -18,7 +18,7 @@ int empty[] = {};
 void testinArr()
 {
     CU_ASSERT_EQUAL(find(inarr,6,3),0);
-    CU_ASSERT_EQUAL(find(inarr,6,8),3);
+    CU_ASSERT_EQUAL(find(inarr,6,8),1);
     CU_ASSERT_EQUAL(find(inarr,6,4),5);
 }
 
@@ -33,7 +33,6 @@ void testEmptyArr()
 {
     CU_ASSERT_EQUAL(find(empty,0,0),-1);
     CU_ASSERT_EQUAL(find(empty,0,9),-1);
-
 }
 
 CU_TestInfo testcases[] = {

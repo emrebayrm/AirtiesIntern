@@ -1,0 +1,13 @@
+language: c
+sudo: true # only for faster builds
+addons:
+  apt:
+      packages:
+        - libcunit1
+        - libcunit1-dev
+script:
+  - make -C CunitExample
+  - ./CunitExample/test
+
+after_success:
+  - cat ./CunitExample/TestFind-Results.xml
