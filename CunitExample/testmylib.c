@@ -11,12 +11,12 @@
 #include <CUnit/Automated.h>
 #include "mylib.h"
 
-int inarr[] = { 3,9,7,8,6,4};
-int empty[] = {};
 
 /**//*---- test cases ------------------*/
 void testinArr()
 {
+    int inarr[] = { 3,9,7,8,6,4};
+
     CU_ASSERT_EQUAL(find(inarr,6,3),0);
     CU_ASSERT_EQUAL(find(inarr,6,8),1);
     CU_ASSERT_EQUAL(find(inarr,6,4),5);
@@ -24,6 +24,8 @@ void testinArr()
 
 void testNotinArr()
 {
+    int inarr[] = { 3,9,7,8,6,4};
+
     CU_ASSERT_EQUAL(find(inarr,6,11),-1);
     CU_ASSERT_EQUAL(find(inarr,6,10),-1);
     CU_ASSERT_EQUAL(find(inarr,6,0),-1);
@@ -31,6 +33,7 @@ void testNotinArr()
 
 void testEmptyArr()
 {
+    int empty[] = {};
     CU_ASSERT_EQUAL(find(empty,0,0),-1);
     CU_ASSERT_EQUAL(find(empty,0,9),-1);
 }
