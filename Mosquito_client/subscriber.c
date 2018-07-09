@@ -73,6 +73,7 @@ int main(int argc, char* argv[]) {
             mes[message->payloadlen] = '\0';
             printf("%s \n", mes);
             i++;
+            free(mes);
         }
         else{
             printf("No message Received \n");
