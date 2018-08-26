@@ -199,3 +199,12 @@ CunitExample/test
 Mosquito_client/pub
 
 Mosquito_client/subs
+
+kernel_modules/kern_work
+kernel_modules/obj
+
+maze/main
+
+Mosquito_client/deleter
+
+Mosquito_client/subscriber
