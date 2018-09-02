@@ -1,0 +1,16 @@
+== create ==
+insmod /lib/modules/hello_world.ko
+cat /proc/devices
+
+major=248
+dev="hello-dev"
+
+mknod "/dev/$dev" c "$major" 0
+
+== dev null ==
+mount - remount
+mknod /dev/null c 1 3
+
+== in background ==
+./userapp /dev/hello-dev poll
+echo "abc" > /proc/hello_proc

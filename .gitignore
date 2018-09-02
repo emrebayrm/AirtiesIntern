@@ -200,7 +200,10 @@ Mosquito_client/pub
 
 Mosquito_client/subs
 
-kernel_modules/kern_work
+kernel_modules/kern_work/linux-stable-4.10.6
+kernel_modules/kern_work/linux-stable-4.10.6.tar.gz
+kernel_modules/kern_work/obj
+kernel_modules/kern_work/bins
 kernel_modules/obj
 
 maze/main
@@ -208,3 +211,7 @@ maze/main
 Mosquito_client/deleter
 
 Mosquito_client/subscriber
+
+kernel_modules/kern_work/kern_template/user/userapp
+
+kernel_modules/kern_work/\.vscode/
